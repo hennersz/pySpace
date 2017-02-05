@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from context import satelliteSimulator #gets all of my local packages
 from satelliteSimulator.cart2kep import cart2kep, normailisedAtan2, normaliseAngle
 from satelliteSimulator.data import *
