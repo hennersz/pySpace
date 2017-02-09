@@ -11,7 +11,7 @@
 """
 
 import math
-from satelliteSimulator.data import GM
+from .data import GM
 
 def calculateGausVects(Ω, ω, i):
     """Calculates the gaussian vectors
@@ -45,7 +45,7 @@ def calculateP(Ω, ω, i):
         An array of floats representing the P vector
     """
     px = math.cos(Ω)*math.cos(ω) - math.sin(Ω)*math.cos(i)*math.sin(ω)
-    py = math.sin(Ω)*math.cos(ω) - math.cos(Ω)*math.cos(i)*math.sin(ω)
+    py = math.sin(Ω)*math.cos(ω) + math.cos(Ω)*math.cos(i)*math.sin(ω)
     pz = math.sin(i)*math.sin(ω)
     return [px, py, pz]
 
@@ -63,9 +63,9 @@ def calculateQ(Ω, ω, i):
         An array of floats representing the Q vector
     """
     qx = -math.cos(Ω)*math.sin(ω) - math.sin(Ω)*math.cos(i)*math.cos(ω)
-    qy = -math.sin(Ω)*math.sin(ω) - math.cos(Ω)*math.cos(i)*math.cos(ω)
+    qy = math.cos(Ω)*math.cos(i)*math.cos(ω) - math.sin(Ω)*math.sin(ω)
     qz = math.sin(i)*math.cos(ω)
-    return [px, py, pz]
+    return [qx, qy, qz]
 
 def calculateSemLatRect(a, e):
     """Calculates the semi latus rectum
@@ -123,9 +123,7 @@ def calculateVelocity(ν, a ,e, r, P, Q):
     """Calculates the velocity vector
 
     Args:
-        x: X co-ordinate in orbital plane (Km)
-
-        y: Y co-ordinate in orbital plane (Km)
+        ν: True Anomoly (Radians)
 
         a: Semi-major axis (Km)
 
@@ -154,9 +152,9 @@ def calculateVelocity(ν, a ,e, r, P, Q):
     return [U, V, W]
 
 def kep2cart(kep):
-    P,Q = calculateGausVects(kep.Ω, kep.ω, kep.i)
-    p = calculateSemLatRect(kep.a, kep.e)
-    r = calculateRadDist(p, kep.e, kep.ν)
-    R = calculatePosition(P, Q, r, kep.ν)
-    V = calculateVelocity(kep.ν, kep.a, kep.e, r, P, Q)
+    P,Q = calculateGausVects(kep['Ω'], kep['ω'], kep['i'])
+    p = calculateSemLatRect(kep['a'], kep['e'])
+    r = calculateRadDist(p, kep['e'], kep['ν'])
+    R = calculatePosition(P, Q, r, kep['ν'])
+    V = calculateVelocity(kep['ν'], kep['a'], kep['e'], r, P, Q)
     return (R, V)

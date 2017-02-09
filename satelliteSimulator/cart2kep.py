@@ -10,22 +10,12 @@
 
 """
 
-from satelliteSimulator.data import GM
+from .data import GM
+from .utils import normaliseAngle, normailisedAtan2
 import numpy as np
 from numpy import linalg as LA
 import math
 
-def normaliseAngle(angle):
-    """Normalises an angle to between 0 and 2 pi
-
-    Args: 
-        angle (float): Angle in radians
-
-    Returns:
-        float. An angle in radians between 0 and 2 * math.pi
-
-    """
-    return angle % (2*math.pi)
 
 def cart2kep(R, V):
     """Converts cartesian elements to keplerian elements
@@ -87,21 +77,6 @@ def cart2kep(R, V):
             }
 
 
-def normailisedAtan2(numerator, denominator):
-    """Atan2 but value is between 0 and 2 pi
-    
-    Args:
-        numerator (float): value for the numerator of atan2
-
-        denominator (float): value for the denominator of atan2
-
-    Returns:
-        float. Normalised result of atan2
-    """
-    result = math.atan2(numerator,denominator)
-    if result < 0:
-        result += 2 * math.pi
-    return result
 
 def calculateUnitOrbitNormal(h̅):
     """Calculates the unit vector normal to the orbit

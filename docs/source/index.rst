@@ -1,18 +1,15 @@
-.. pySpace documentation master file, created by
-   sphinx-quickstart on Mon Jan 23 16:52:16 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. _index:
 
-PySpace: A simple satellite orbit simulator
-===========================================
+PySpace satellite similator
+===========================
 
-.. toctree::
-   :maxdepth: 3
-   :caption: Contents:
+PySpace provides a simple simulation of a satellites orbit in the two body problem.
 
-   code
+  .. toctree::
+    :maxdepth: 3
 
-
+    reference
+    
 Indices and tables
 ==================
 
