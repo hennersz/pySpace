@@ -44,7 +44,19 @@ def normailisedAtan2(numerator, denominator):
 def writeData(data, fileName):
     with open(fileName, 'w') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerows(data)
+        for row in data:
+            writer.writerow(flattenTuple(row))
+
+
+def flattenTuple(tpl):
+    res = []
+    for xs in tpl:
+        try:
+            for x in xs:
+                res.append(x)
+        except TypeError:
+            res.append(xs)
+    return res
 
 def readData(fileName):
     result = []

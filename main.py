@@ -10,11 +10,13 @@
 
 """
 
-from satelliteSimulator.plot import plotECI
+from satelliteSimulator.plot import plotGroundTracks
 from satelliteSimulator.utils import readData,writeData
 from satelliteSimulator.keplerianPropogation import propogateOrbit
 from satelliteSimulator.data import *
+from satelliteSimulator.groundTracks import getGroundTracks
 import numpy as np
 
-results = propogateOrbit(jason['R'], jason['V'], 10, 10000, jason['time'])
-writeData(results, './data/kepProp.csv')
+data = getGroundTracks(jason, 1)
+writeData(data, './data/groundTracks.csv')
+plotGroundTracks(data)

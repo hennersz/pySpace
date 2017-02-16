@@ -20,12 +20,12 @@ import numpy as np
 
 def propogateOrbit(R,V, δt, steps, baseTime):
 
-    results = [tuple(R + V + [baseTime])]
+    results = [(R,V, baseTime)]
     newR = R
     newV = V
     for step in range(steps):
         newR, newV = calculateOrbitStep(newR, newV, δt)
-        results.append(tuple(newR + newV + [baseTime + δt*(step+1)]))
+        results.append((newR, newV, baseTime + δt*(step+1)))
     return results
 
 

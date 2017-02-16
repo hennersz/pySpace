@@ -16,6 +16,10 @@ import math
 def calculateLatLon(R):
     longitude = normailisedAtan2(R[1], R[0])
     latitude = math.atan(R[2]/math.sqrt(R[0]**2 + R[1]**2))
+    longitude = math.degrees(longitude)
+    latitude = math.degrees(latitude)
+    if(longitude > 180):
+        longitude -= 360
     return (longitude, latitude)
 
 def calulateHeight(R):
@@ -23,5 +27,5 @@ def calulateHeight(R):
 
 def ecef2latlong(R):
     lon, lat = calculateLatLon(R)
-    height = calulateHeight(r)
+    height = calulateHeight(R)
     return (lat, lon, height)
