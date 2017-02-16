@@ -18,15 +18,15 @@ from .solveKepler import solveKepler
 from .kep2cart import calculateGausVects
 import numpy as np
 
-def propogateOrbit(R,V, δt, steps):
+def propogateOrbit(R,V, δt, steps, baseTime):
 
-    results = [tuple(R + V)]
+    results = [tuple(R + V + [baseTime])]
     newR = R
     newV = V
     for step in range(steps):
         newR, newV = calculateOrbitStep(newR, newV, δt)
-        results.append(tuple(newR + newV))
-    writeData(results, './data/kepProp.csv')
+        results.append(tuple(newR + newV + [baseTime + δt*(step+1)]))
+    return results
 
 
 def calculateOrbitStep(R, V, δt):
