@@ -11,7 +11,7 @@
 """
 
 import math
-from .data import GM
+from ..data import GM
 
 def calculateGausVects(Ω, ω, i):
     """Calculates the gaussian vectors

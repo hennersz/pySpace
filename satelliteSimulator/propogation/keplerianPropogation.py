@@ -4,23 +4,25 @@
 """
 .. module:: keplerianPropogation
     :platform: Unix
-    :synopsis: Calculate the postition and velocity vectors of the satellite after some time step
+    :synopsis: Calculate the postition and velocity vectors of the satellite
+        after some time step
 
 .. moduleauthor:: Henry Mortimer <henry@morti.net>
 
 """
 
 import math
-from .utils import normaliseAngle, normailisedAtan2, writeData
-from .cart2kep import cart2kep
-from .data import GM
-from .solveKepler import solveKepler
-from .kep2cart import calculateGausVects
+from ..utils import normalisedAtan2
+from ..converters.cart2kep import cart2kep
+from ..data import GM
+from ..solveKepler import solveKepler
+from ..converters.kep2cart import calculateGausVects
 import numpy as np
 
-def propogateOrbit(R,V, δt, steps, baseTime):
 
-    results = [(R,V, baseTime)]
+def propogateOrbit(R, V, δt, steps, baseTime):
+
+    results = [(R, V, baseTime)]
     newR = R
     newV = V
     for step in range(steps):
@@ -30,7 +32,7 @@ def propogateOrbit(R,V, δt, steps, baseTime):
 
 
 def calculateOrbitStep(R, V, δt):
-    """Calculates the position and velocity vectors of a satellite δt seconds after 
+    """Calculates the position and velocity vectors of a satellite δt seconds after
     the epoch for RV
 
     Args:
@@ -49,10 +51,11 @@ def calculateOrbitStep(R, V, δt):
 
     Ei = calculateEccentAnom(r, kep, δt)
 
-    newR =  calculateNewPosition(Ei, kep)
+    newR = calculateNewPosition(Ei, kep)
     newV = calculateNewVelocity(Ei, kep)
-    
-    return (list(newR),list(newV))
+
+    return (list(newR), list(newV))
+
 
 def calculateEccentAnom(r, kep, δt):
     """Calculates the eccentric anomoly at time t + δt
@@ -69,15 +72,15 @@ def calculateEccentAnom(r, kep, δt):
     """
 
     n = math.sqrt(GM/kep['a']**3)
-    
+
     cosE0 = r*math.cos(kep['ν'])/kep['a'] + kep['e']
     sinE0 = (r*math.sin(kep['ν']))/(kep['a']*math.sqrt(1-kep['e']**2))
-    E0 = normailisedAtan2(sinE0, cosE0) 
+    E0 = normalisedAtan2(sinE0, cosE0)
 
     M0 = E0 - kep['e']*math.sin(E0)
 
     Mi = M0 + n*δt
-    
+
     return solveKepler(kep['e'], Mi)
 
 
@@ -95,10 +98,11 @@ def calculateNewPosition(Ei, kep):
 
     x = kep['a']*(math.cos(Ei) - kep['e'])
     y = kep['a']*math.sqrt(1-kep['e']**2)*math.sin(Ei)
-    
-    P,Q = calculateGausVects(kep['Ω'], kep['ω'], kep['i'])
-    
+
+    P, Q = calculateGausVects(kep['Ω'], kep['ω'], kep['i'])
+
     return np.dot(x, P) + np.dot(y, Q)
+
 
 def calculateNewVelocity(Ei, kep):
     """Calculates the new UVW velocity vector for the given eccentric anomoly
@@ -110,15 +114,13 @@ def calculateNewVelocity(Ei, kep):
 
     Returns
         The velocity vector of the satellite.
-        
+
     """
 
     r = kep['a']*(1-kep['e']*math.cos(Ei))
     xdot = -math.sqrt(kep['a']*GM)*math.sin(Ei)/r
     ydot = math.sqrt(kep['a']*GM)*math.sqrt(1-kep['e']**2)*math.cos(Ei)/r
 
-    P,Q = calculateGausVects(kep['Ω'], kep['ω'], kep['i'])
+    P, Q = calculateGausVects(kep['Ω'], kep['ω'], kep['i'])
 
     return np.dot(xdot, P) + np.dot(ydot, Q)
-
-

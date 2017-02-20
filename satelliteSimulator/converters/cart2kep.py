@@ -10,8 +10,8 @@
 
 """
 
-from .data import GM
-from .utils import normaliseAngle, normailisedAtan2
+from ..data import GM
+from ..utils import normaliseAngle, normalisedAtan2
 import numpy as np
 from numpy import linalg as LA
 import math
@@ -104,7 +104,7 @@ def calculateInclination(W̅):
         float. The inclination in radians
     """
     numerator = math.sqrt(W̅[0]**2 + W̅[1]**2)
-    return normailisedAtan2(numerator, W̅[2])
+    return normalisedAtan2(numerator, W̅[2])
 
 def calculateRAAN(W̅):
     """Calculates the RAAN from the unit orbit normal
@@ -115,7 +115,7 @@ def calculateRAAN(W̅):
     Returns:
         float. The inclination in radians
     """
-    return normailisedAtan2(W̅[0],-W̅[1])
+    return normalisedAtan2(W̅[0],-W̅[1])
 
 def vectorLength(vector):
     """Calculates the length of a vector using the pythagorean theorem
@@ -199,7 +199,7 @@ def calculateE(R, V, a, n):
     r = LA.norm(R)
     numerator = rv/(a**2*n)
     denominator = 1 - r/a
-    return normailisedAtan2(numerator, denominator)
+    return normalisedAtan2(numerator, denominator)
 
 def calculateU(R, i, Ω):
     """Calculates the argument of latitude
@@ -216,7 +216,7 @@ def calculateU(R, i, Ω):
     """
     numerator = R[2]/math.sin(i)
     denominator = R[0]*math.cos(Ω) + R[1]*math.sin(Ω)
-    return normailisedAtan2(numerator,denominator)
+    return normalisedAtan2(numerator,denominator)
 
 def calculateTrueAnom(E,e):
     """Calculates the True anomaly
@@ -231,7 +231,7 @@ def calculateTrueAnom(E,e):
     """
     numerator = math.sqrt(1 - e**2) * math.sin(E)
     denominator = math.cos(E) - e
-    return normailisedAtan2(numerator, denominator)
+    return normalisedAtan2(numerator, denominator)
 
 def calculateArgofPer(u, ν):
     """Calculates the argument of perigee

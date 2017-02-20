@@ -10,7 +10,7 @@
 
 """
 
-from .data import BASETIME, EARTHRR
+from ..data import BASETIME, EARTHRR
 import math
 
 

@@ -3,3 +3,4 @@ numpy>=1.11.2
 tox>=2.5.0
 Sphinx>=1.5.2
 matplotlib
+./basemap
