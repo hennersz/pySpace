@@ -56,5 +56,7 @@ Intelsat = {
 
 GM = 398600.4415
 BASETIME = 946728000.000
-EARTHRR = math.pi*2 / 86400 #rotation rate of earth in radians/s
-EARTHRADIUS = 6367
+EARTHRR = math.pi*2 / 86400  # rotation rate of earth in radians/s
+EARTHRADIUS = 6367  # km
+C20 = -0.4841653711736e-3
+AEGMA96 = 6378.1363  # km

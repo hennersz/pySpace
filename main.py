@@ -10,7 +10,7 @@
 
 """
 
-from satelliteSimulator.propogation.rk4 import rk4Propogation
+from satelliteSimulator.propogation.rk4 import rk4Propogation, rk4j2Propogation
 from satelliteSimulator.propogation.keplerianPropogation import propogateOrbit
 from satelliteSimulator.data import jason
 from satelliteSimulator.analysis.groundTracks import getGroundTracks
@@ -38,31 +38,33 @@ def initMap():
 
 
 def main():
-    #m = initMap()
     rk4 = rk4Propogation(jason['R'], jason['V'], 10, 8640, jason['time'])
+    rk4j2 = rk4j2Propogation(jason['R'], jason['V'], 10, 8640, jason['time'])
     kep = propogateOrbit(jason['R'], jason['V'], 10, 8640, jason['time'])
-    diffs1 = []
-    diffs2 = []
-    for r, k in zip(rk4, kep):
-        diffs1.append((r[2],)+HCLDiff((r[0], r[1]), (k[0], k[1])))
-    for r, k in zip(rk4, kep):
-        diffs2.append((r[2],)+ENUDiff((r[0], r[1]), (k[0], k[1]), (51, -0.5), r[2]))
+    # diffs1 = []
+    # diffs2 = []
+    # for r, k in zip(rk4, rk4j2):
+    #     diffs1.append((r[2],)+HCLDiff((r[0], r[1]), (k[0], k[1])))
+    # for r, k in zip(rk4, rk4j2):
+    #     diffs2.append((r[2],)+ENUDiff((r[0], r[1]), (k[0], k[1]), (51, -0.5), r[2]))
 
-    plt.scatter([x[0] for x in diffs2], [x[1] for x in diffs2], marker='.', color='k', s=1)
-    plt.scatter([x[0] for x in diffs2], [x[2] for x in diffs2], marker='.', color='b', s=1)
-    plt.scatter([x[0] for x in diffs2], [x[3] for x in diffs2], marker='.', color='r', s=1)
+    # plt.scatter([x[0] for x in diffs2], [x[1] for x in diffs2], marker='.', color='k', s=1)
+    # plt.scatter([x[0] for x in diffs2], [x[2] for x in diffs2], marker='.', color='b', s=1)
+    # plt.scatter([x[0] for x in diffs2], [x[3] for x in diffs2], marker='.', color='r', s=1)
 
-    plt.show()
-    # ecefData = []
-    # for step in eciData:
-    #     ecefData.append(ECI2ECEF(step[0], step[1], step[2]))
-
-    # groundTracks = getGroundTracks([x[0] for x in ecefData if isVisible(x[0], 51.32, -0.5, 5)])
-    # plotGroundTracks(groundTracks, 'y', m)
-    # groundTracks = getGroundTracks([x[0] for x in ecefData if not isVisible(x[0], 51.32, -0.5, 5)])
-    # plotGroundTracks(groundTracks, 'k', m)
-    # plt.title("Ground Tracks")
     # plt.show()
+
+    m = initMap()
+    ecefData = []
+    for step in rk4j2:
+        ecefData.append(ECI2ECEF(step[0], step[1], step[2]))
+
+    groundTracks = getGroundTracks([x[0] for x in ecefData if isVisible(x[0], 51.32, -0.5, 5)])
+    plotGroundTracks(groundTracks, 'y', m)
+    groundTracks = getGroundTracks([x[0] for x in ecefData if not isVisible(x[0], 51.32, -0.5, 5)])
+    plotGroundTracks(groundTracks, 'k', m)
+    plt.title("Ground Tracks")
+    plt.show()
 
 
 if __name__ == '__main__':

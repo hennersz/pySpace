@@ -11,7 +11,7 @@
 
 """
 
-from ..data import GM
+from ..data import GM, AEGMA96, C20
 import numpy as np
 from numpy import linalg as LA
 import math
@@ -109,3 +109,29 @@ def denormaliseCoefficient(c, n, m):
     den = math.factorial(n-m)*(2*n + 1)*(2-kdδ(m))
     normaliser = math.sqrt(num/den)
     return c/normaliser
+
+
+def j2diff(R, r0, c, a):
+    x = -GM*R[0]/r0**3 + 1.5*GM*(a**2/r0**5)*c*R[0]*(1-(5*R[2]**2)/r0**2)
+    y = -GM*R[1]/r0**3 + 1.5*GM*(a**2/r0**5)*c*R[1]*(1-(5*R[2]**2)/r0**2)
+    z = -GM*R[2]/r0**3 + 1.5*GM*(a**2/r0**5)*c*R[2]*(3-(5*R[2]**2)/r0**2)
+
+    return [x, y, z]
+
+
+def j2k(R, h):
+    c = denormaliseCoefficient(C20, 2, 0)
+    r0 = LA.norm(R)
+    KR = np.array(j2diff(R, r0, c, AEGMA96))
+    KR = (0.5*h**2)*KR
+    return list(KR)
+
+
+def rk4j2Propogation(R, V, timestep, steps, baseTime):
+    results = [(R, V, baseTime)]
+    newR = R
+    newV = V
+    for step in range(steps):
+        newR, newV = rk4PropogationStep(newR, newV, timestep, j2k)
+        results.append((newR, newV, baseTime + timestep*(step+1)))
+    return results
