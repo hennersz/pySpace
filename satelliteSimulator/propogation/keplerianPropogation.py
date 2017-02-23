@@ -21,6 +21,24 @@ import numpy as np
 
 
 def propogateOrbit(R, V, δt, steps, baseTime):
+    """Propogates an orbit using the keplerian propogation algorithm
+    for a given number of steps.
+
+    Args:
+        R: Array (float): The position vector at time basetime.(km)
+
+        V: Array (float): The velocity vector at time basetime.(km)
+
+        δt: int: The time step in seconds.
+
+        steps: int: The number of steps to calculate.
+
+        baseTime: float: The start time in seconds.
+
+    Returns:
+        Array: A list of tuples containing the R and V ECI vectors (km)
+        and the time (seconds).
+    """
 
     results = [(R, V, baseTime)]
     newR = R

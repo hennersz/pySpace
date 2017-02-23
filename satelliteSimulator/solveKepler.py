@@ -12,6 +12,7 @@
 
 import math
 
+
 def f(E, M, e):
     """Keplers equation rearranged to equal 0. Hence this will return
     0 when you have the root of the equation.
@@ -29,8 +30,10 @@ def f(E, M, e):
     """
     return E - e * math.sin(E) - M
 
+
 def solveKepler(e, M):
-    """Solves keplers equation numerically using newtons method. 
+    """Solves keplers equation numerically using
+       newtons method.
 
     Args:
         e: The eccentricity
@@ -45,7 +48,8 @@ def solveKepler(e, M):
     else:
         E = M
 
-    while abs(f(E, M, e)) > 1e-8:#run loop until the result is sufficiently small
-        E = E -(E - e*math.sin(E) - M)/(1 - e*math.cos(E))
+    # run loop until the result is sufficiently small
+    while abs(f(E, M, e)) > 1e-8:
+        E = E - (E - e*math.sin(E) - M)/(1 - e*math.cos(E))
 
     return E

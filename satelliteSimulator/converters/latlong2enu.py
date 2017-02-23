@@ -14,6 +14,16 @@ import math
 
 
 def calculateENUBasis(φ, λ):
+    """Calculates an ENU unit basis from latitude and lonitude.
+
+    Args:
+        φ: float: Latitude (degrees).
+
+        λ: float: Longitude (degrees).
+
+    Returns:
+        Tuple: The E, N and U unit vectors
+    """
     lat = math.radians(φ)
     lon = math.radians(λ)
 
@@ -24,6 +34,14 @@ def calculateENUBasis(φ, λ):
 
 
 def calculateE(λ):
+    """Calculates the E (east) unit vector
+
+    Args:
+        λ: float: Longitude (degrees).
+
+    Returns:
+        Array (float). The E unit vector.
+    """
     ex = -math.sin(λ)
     ey = math.cos(λ)
 
@@ -31,6 +49,16 @@ def calculateE(λ):
 
 
 def calculateN(φ, λ):
+    """Calculates the N (north) unit vector
+
+    Args:
+        φ: float: Latitude (degrees).
+
+        λ: float: Longitude (degrees).
+
+    Returns:
+        Array (float). The N unit vector.
+    """
     nx = -math.cos(λ)*math.sin(φ)
     ny = -math.sin(λ)*math.sin(φ)
     nz = math.cos(φ)
@@ -39,6 +67,16 @@ def calculateN(φ, λ):
 
 
 def calculateU(φ, λ):
+    """Calculates the U (up) unit vector
+
+    Args:
+        φ: float: Latitude (degrees).
+
+        λ: float: Longitude (degrees).
+
+    Returns:
+        Array (float). The U unit vector.
+    """
     ux = math.cos(λ)*math.cos(φ)
     uy = math.sin(λ)*math.cos(φ)
     uz = math.sin(φ)

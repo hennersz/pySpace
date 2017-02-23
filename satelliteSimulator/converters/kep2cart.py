@@ -13,6 +13,7 @@
 import math
 from ..data import GM
 
+
 def calculateGausVects(Ω, ω, i):
     """Calculates the gaussian vectors
 
@@ -30,6 +31,7 @@ def calculateGausVects(Ω, ω, i):
     P = calculateP(Ω, ω, i)
     Q = calculateQ(Ω, ω, i)
     return (P, Q)
+
 
 def calculateP(Ω, ω, i):
     """Calculates the P gaussian vector
@@ -49,6 +51,7 @@ def calculateP(Ω, ω, i):
     pz = math.sin(i)*math.sin(ω)
     return [px, py, pz]
 
+
 def calculateQ(Ω, ω, i):
     """Calculates the Q gaussian vector
 
@@ -67,6 +70,7 @@ def calculateQ(Ω, ω, i):
     qz = math.sin(i)*math.cos(ω)
     return [qx, qy, qz]
 
+
 def calculateSemLatRect(a, e):
     """Calculates the semi latus rectum
 
@@ -81,8 +85,9 @@ def calculateSemLatRect(a, e):
 
     return a*(1-e**2)
 
+
 def calculateRadDist(p, e, ν):
-    """Calculates the radial distance 
+    """Calculates the radial distance
 
     Args:
         p: Semi latus rectum (Km)
@@ -93,6 +98,7 @@ def calculateRadDist(p, e, ν):
     """
 
     return p/(1 + e*math.cos(ν))
+
 
 def calculatePosition(P, Q, r, ν):
     """Calculates the satellites position vector in the ECI basis
@@ -117,9 +123,10 @@ def calculatePosition(P, Q, r, ν):
     Y = x*P[1] + y*Q[1]
     Z = x*P[2] + y*Q[2]
 
-    return [X,Y,Z]
+    return [X, Y, Z]
 
-def calculateVelocity(ν, a ,e, r, P, Q):
+
+def calculateVelocity(ν, a, e, r, P, Q):
     """Calculates the velocity vector
 
     Args:
@@ -151,8 +158,9 @@ def calculateVelocity(ν, a ,e, r, P, Q):
 
     return [U, V, W]
 
+
 def kep2cart(kep):
-    P,Q = calculateGausVects(kep['Ω'], kep['ω'], kep['i'])
+    P, Q = calculateGausVects(kep['Ω'], kep['ω'], kep['i'])
     p = calculateSemLatRect(kep['a'], kep['e'])
     r = calculateRadDist(p, kep['e'], kep['ν'])
     R = calculatePosition(P, Q, r, kep['ν'])

@@ -1,7 +1,7 @@
 .. _reference:
 
-API reference for satellite simulator
-*************************************
+API reference
+*************
 
 .. automodule:: satelliteSimulator
   :members:
@@ -14,6 +14,7 @@ Modules:
   :titlesonly:
   :maxdepth: 2
 
-  kep2cart
-  cart2kep
+  analysis
+  converters
+  propogation
   solveKepler

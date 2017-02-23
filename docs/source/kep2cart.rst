@@ -3,5 +3,5 @@
 ``kep2cart`` --- Keplerian elements to cartesian coordinates conversion
 =======================================================================
 
-.. automodule:: satelliteSimulator.kep2cart
+.. automodule:: satelliteSimulator.converters.kep2cart
    :members:

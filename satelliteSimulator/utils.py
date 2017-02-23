@@ -12,6 +12,7 @@
 
 import math
 import csv
+from distutils.util import strtobool
 
 
 def normaliseAngle(angle):
@@ -44,11 +45,10 @@ def normalisedAtan2(numerator, denominator):
     return result
 
 
-def writeData(data, fileName):
-    with open(fileName, 'w') as csvfile:
-        writer = csv.writer(csvfile)
-        for row in data:
-            writer.writerow(flattenTuple(row))
+def writeData(data, csvfile):
+    writer = csv.writer(csvfile)
+    for row in data:
+        writer.writerow(flattenTuple(row))
 
 
 def flattenTuple(tpl):
@@ -62,13 +62,31 @@ def flattenTuple(tpl):
     return res
 
 
-def readData(fileName):
+def readData(csvfile):
     result = []
-    with open(fileName, 'r') as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            parsedData = []
-            for item in row:
-                parsedData.append(float(item))
-            result.append(parsedData)
+    reader = csv.reader(csvfile)
+    for row in reader:
+        parsedData = []
+        for item in row:
+            parsedData.append(float(item))
+        result.append(parsedData)
     return result
+
+
+def readECIData(csvfile):
+    result = []
+    reader = csv.reader(csvfile)
+    for row in reader:
+        R = [float(row[0]), float(row[1]), float(row[2])]
+        V = [float(row[3]), float(row[4]), float(row[5])]
+        time = float(row[6])
+        result.append((R, V, time))
+    return result
+
+
+def readGrndTrckData(csvfile):
+    results = []
+    reader = csv.reader(csvfile)
+    for row in reader:
+        results.append((float(row[0]), float(row[1]), float(row[2]), strtobool(row[3])))
+    return results
