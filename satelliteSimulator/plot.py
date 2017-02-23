@@ -77,3 +77,13 @@ def plotGroundTracks(data):
     m.plot(vx, vy, marker='o', linestyle='None', markersize=0.5,  color='y')
     m.plot(hx, hy, marker='o', linestyle='None', markersize=0.5,  color='k')
     plt.title('Ground Tracks')
+    plt.show()
+
+
+def plotDifferences(data):
+    plt.scatter([x[0] for x in data], [x[1] for x in data], marker='.', color='k', s=1)
+    plt.scatter([x[0] for x in data], [x[2] for x in data], marker='.', color='b', s=1)
+    plt.scatter([x[0] for x in data], [x[3] for x in data], marker='.', color='r', s=1)
+
+    plt.title('Differences')
+    plt.show()

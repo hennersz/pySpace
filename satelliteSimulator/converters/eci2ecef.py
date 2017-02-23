@@ -89,4 +89,4 @@ def ECI2ECEF(R, V, time):
     pos = calculateECEFPos(R, Θ)
     vel = calculateECEFVel(R, V, Θ)
 
-    return (pos, vel)
+    return (pos, vel, time)

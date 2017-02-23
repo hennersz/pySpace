@@ -137,3 +137,34 @@ def stationVisibility(Rs, stations):
             return True
 
     return False
+
+
+def getStationPassTimes(ecefData, station):
+    seenPrev = False
+    res = []
+    currStartTime = 0
+    for step in ecefData:
+        vis = isVisible(step[0], station[0], station[1], station[2])
+        if vis and not seenPrev:
+            currStartTime = step[2]
+            seenPrev = True
+        elif not vis and seenPrev:
+            res.append((currStartTime, step[2]))
+            seenPrev = False
+    return res
+
+
+def allPassTimes(ecefData):
+    stations = []
+    for lat in range(19):
+        for lon in range(37):
+            stations.append(((lat-9)*10, (lon-18)*10, 5))
+    res = []
+    for station in stations:
+        passTimes = getStationPassTimes(ecefData, station)
+        totalPassTime = 0
+        for step in passTimes:
+            totalPassTime += step[1] - step[0]
+        res.append((station[0], station[1], totalPassTime))
+
+    return res

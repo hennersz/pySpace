@@ -14,18 +14,16 @@ from satelliteSimulator.propogation.rk4 import rk4MonoPropogation,\
                                                 rk4j2Propogation
 from satelliteSimulator.propogation.keplerianPropogation import propogateOrbit
 from satelliteSimulator.data import Jason, GPSIIR, Galileo
-from satelliteSimulator.utils import writeData, readECIData, readGrndTrckData
+from satelliteSimulator.utils import writeData, readECIData, readGrndTrckData,\
+                                    readData
 from satelliteSimulator.analysis.groundTracks import getGroundTracks
-from satelliteSimulator.plot import plotGroundTracks
+from satelliteSimulator.plot import plotGroundTracks, plotDifferences
 from satelliteSimulator.converters.eci2ecef import ECI2ECEF
-from satelliteSimulator.analysis.visibility import isVisible
 from satelliteSimulator.analysis.differences import HCLDiff, ENUDiff
+from satelliteSimulator.analysis.visibility import getStationPassTimes, allPassTimes
 import argparse
-import matplotlib.pyplot as plt
 import sys
 from itertools import zip_longest, islice
-
-
 
 
 def getArgs():
@@ -36,7 +34,7 @@ def getArgs():
     prop.add_argument('satellite', type=str, choices=['Jason', 'GPSIIR', 'Galileo'])
     prop.add_argument('algorithm', type=str, choices=['kep', 'rk4', 'j2'])
     prop.add_argument('days', type=float, default=1)
-    prop.add_argument('-o','--outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
+    prop.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
 
     diff = subparsers.add_parser('difference')
     diffAlg = diff.add_mutually_exclusive_group(required=True)
@@ -52,7 +50,13 @@ def getArgs():
     grndTrck.add_argument('stations', nargs="+", type=float, metavar='lat lon angle')
 
     plot = subparsers.add_parser('plot')
+    plot.add_argument('graph', type=str, choices=['grndtrck', 'diffs'])
     plot.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
+
+    passTimes = subparsers.add_parser('passTimes')
+    passTimes.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
+    passTimes.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
+    passTimes.add_argument('station', nargs=3, type=float, metavar=['lat', 'lon',  'angle'])
 
     args = parser.parse_args()
     if not args.cmd:
@@ -119,40 +123,25 @@ def groundTracks(args):
 
 
 def plot(args):
-    data = readGrndTrckData(args.infile)
-    plotGroundTracks(data)
-    plt.show()
+    if args.graph == 'grndtrck':
+        data = readGrndTrckData(args.infile)
+        plotGroundTracks(data)
+    elif args.graph == 'diffs':
+        data = readData(args.infile)
+        plotDifferences(data)
 
 
+def passTimes(args):
+    data = readECIData(args.infile)
+    ecefData = []
+
+    for step in data:
+        ecefData.append(ECI2ECEF(step[0], step[1], step[2]))
+
+    passTimes = allPassTimes(ecefData)
+
+    writeData(passTimes, args.outfile)
 def main():
-    # rk4 = rk4MonoPropogation(Galileo['R'], Galileo['V'], 10, 8640*100, Galileo['time'])
-    # rk4j2 = rk4j2Propogation(Galileo['R'], Galileo['V'], 10, 8640*100, Galileo['time'])
-    # kep = propogateOrbit(Galileo['R'], Galileo['V'], 10, 8640*100, Galileo['time'])
-    # diffs1 = []
-    # diffs2 = []
-    # for r, k in zip(rk4, rk4j2):
-    #     diffs1.append((r[2],)+HCLDiff((r[0], r[1]), (k[0], k[1])))
-    # for r, k in zip(rk4, rk4j2):
-    #     diffs2.append((r[2],)+ENUDiff((r[0], r[1]), (k[0], k[1]), (51, -0.5), r[2]))
-
-    # plt.scatter([x[0] for x in diffs2], [x[1] for x in diffs2], marker='.', color='k', s=1)
-    # plt.scatter([x[0] for x in diffs2], [x[2] for x in diffs2], marker='.', color='b', s=1)
-    # plt.scatter([x[0] for x in diffs2], [x[3] for x in diffs2], marker='.', color='r', s=1)
-
-    # plt.show()
-
-    # m = initMap()
-    # ecefData = []
-    # for step in rk4j2:
-    #     ecefData.append(ECI2ECEF(step[0], step[1], step[2]))
-
-    # groundTracks = getGroundTracks([x[0] for x in ecefData if isVisible(x[0], 51.32, -0.5, 5)])
-    # plotGroundTracks(groundTracks, 'y', m)
-    # groundTracks = getGroundTracks([x[0] for x in ecefData if not isVisible(x[0], 51.32, -0.5, 5)])
-    # plotGroundTracks(groundTracks, 'k', m)
-    # plt.title("Ground Tracks")
-    # plt.show()
-
     args = getArgs()
     if args.cmd == 'propogate':
         propogate(args)
@@ -162,6 +151,8 @@ def main():
         groundTracks(args)
     elif args.cmd == 'plot':
         plot(args)
+    elif args.cmd == 'passTimes':
+        passTimes(args)
 
 
 if __name__ == '__main__':
