@@ -11,6 +11,7 @@
 """
 
 import matplotlib.pyplot as plt
+import matplotlib
 from mpl_toolkits.basemap import Basemap
 import numpy as np
 
@@ -86,4 +87,19 @@ def plotDifferences(data):
     plt.scatter([x[0] for x in data], [x[3] for x in data], marker='.', color='r', s=1)
 
     plt.title('Differences')
+    plt.show()
+
+
+def plotPassData(data):
+    m = initMap()
+
+    times = [x[2] for x in data]
+    x = [x[0] for x in data]
+    y = [x[1] for x in data]
+    
+    lat, lon = m(x, y)
+
+    m.scatter(lon, lat, marker='o', c=times, zorder=10, cmap='hot')
+    plt.colorbar()
+
     plt.show()

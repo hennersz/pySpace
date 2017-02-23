@@ -17,6 +17,7 @@ from ..utils import normalisedAtan2
 from numpy import linalg as LA
 import numpy as np
 import math
+import progressbar
 
 
 def getBasis(R):
@@ -160,11 +161,15 @@ def allPassTimes(ecefData):
         for lon in range(37):
             stations.append(((lat-9)*10, (lon-18)*10, 5))
     res = []
+    bar = progressbar.ProgressBar(redirect_stdout=True, max_value=len(stations))
+    stationsProcessed = 0
     for station in stations:
         passTimes = getStationPassTimes(ecefData, station)
         totalPassTime = 0
         for step in passTimes:
             totalPassTime += step[1] - step[0]
         res.append((station[0], station[1], totalPassTime))
+        stationsProcessed += 1
+        bar.update(stationsProcessed)
 
     return res

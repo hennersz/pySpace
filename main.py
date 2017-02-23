@@ -17,7 +17,7 @@ from satelliteSimulator.data import Jason, GPSIIR, Galileo
 from satelliteSimulator.utils import writeData, readECIData, readGrndTrckData,\
                                     readData
 from satelliteSimulator.analysis.groundTracks import getGroundTracks
-from satelliteSimulator.plot import plotGroundTracks, plotDifferences
+from satelliteSimulator.plot import plotGroundTracks, plotDifferences, plotPassData
 from satelliteSimulator.converters.eci2ecef import ECI2ECEF
 from satelliteSimulator.analysis.differences import HCLDiff, ENUDiff
 from satelliteSimulator.analysis.visibility import getStationPassTimes, allPassTimes
@@ -47,10 +47,10 @@ def getArgs():
     grndTrck = subparsers.add_parser('groundTrack')
     grndTrck.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
     grndTrck.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
-    grndTrck.add_argument('stations', nargs="+", type=float, metavar='lat lon angle')
+    grndTrck.add_argument('stations', nargs="*", type=float, metavar='lat lon angle')
 
     plot = subparsers.add_parser('plot')
-    plot.add_argument('graph', type=str, choices=['grndtrck', 'diffs'])
+    plot.add_argument('graph', type=str, choices=['grndtrck', 'diffs', 'passTimes'])
     plot.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
 
     passTimes = subparsers.add_parser('passTimes')
@@ -129,6 +129,9 @@ def plot(args):
     elif args.graph == 'diffs':
         data = readData(args.infile)
         plotDifferences(data)
+    elif args.graph == 'passTimes':
+        data = readData(args.infile)
+        plotPassData(data)
 
 
 def passTimes(args):
@@ -141,6 +144,8 @@ def passTimes(args):
     passTimes = allPassTimes(ecefData)
 
     writeData(passTimes, args.outfile)
+
+
 def main():
     args = getArgs()
     if args.cmd == 'propogate':
