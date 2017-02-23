@@ -144,13 +144,18 @@ def getStationPassTimes(ecefData, station):
     seenPrev = False
     res = []
     currStartTime = 0
+    θ = 0
+    α = 0
     for step in ecefData:
         vis = isVisible(step[0], station[0], station[1], station[2])
         if vis and not seenPrev:
             currStartTime = step[2]
             seenPrev = True
+            Rp = latLon2ecef(station[0], station[1])
+            rsse, rssn, rssu = getS2TSVector(step[0], Rp)
+            θ, α = calculateAngle(rsse, rssn, rssu)
         elif not vis and seenPrev:
-            res.append((currStartTime, step[2]))
+            res.append((station[0], station[1], currStartTime, step[2], step[2]-currStartTime, θ, α))
             seenPrev = False
     return res
 

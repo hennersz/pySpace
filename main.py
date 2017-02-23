@@ -56,7 +56,7 @@ def getArgs():
     passTimes = subparsers.add_parser('passTimes')
     passTimes.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
     passTimes.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
-    passTimes.add_argument('station', nargs=3, type=float, metavar=['lat', 'lon',  'angle'])
+    passTimes.add_argument('stations', nargs='*', type=float, metavar=['lat', 'lon',  'angle'])
 
     args = parser.parse_args()
     if not args.cmd:
@@ -141,7 +141,12 @@ def passTimes(args):
     for step in data:
         ecefData.append(ECI2ECEF(step[0], step[1], step[2]))
 
-    passTimes = allPassTimes(ecefData)
+    if args.stations is None:
+        passTimes = allPassTimes(ecefData)
+    else:
+        passTimes = []
+        for station in list(triples(args.stations)):
+            passTimes += getStationPassTimes(ecefData, station)
 
     writeData(passTimes, args.outfile)
 
