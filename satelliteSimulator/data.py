@@ -1,3 +1,12 @@
+"""
+.. module:: data
+    :platform: Unix
+    :synopsis: Contains data and constants
+
+.. moduleauthor:: Henry Mortimer <henry@morti.net>	
+"""
+
+
 import math
 
 Jason = {
