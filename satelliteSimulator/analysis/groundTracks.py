@@ -19,7 +19,8 @@ def getGroundTracks(ecefPos, stations):
 
     Args:
         ecefPos: Array: An array of position and velocity vectors (km)
-
+        
+        stations: Array (Tuple): List of tuples of lat lon and masking angle
 
     Returns
         Array: An array of latitudes and longitudes (degrees)

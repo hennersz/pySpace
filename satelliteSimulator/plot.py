@@ -83,6 +83,15 @@ def plotGroundTracks(data):
 
 
 def plotDifferences(data):
+    """Plots the differences between two orbits
+    
+    Args:
+        data:Array: A list of tuples contianing time then differences
+        in 3 directions
+        
+    Returns:
+        None
+    """
     plt.scatter([x[0] for x in data], [x[1] for x in data], marker='.', color='k', s=1)
     plt.scatter([x[0] for x in data], [x[2] for x in data], marker='.', color='b', s=1)
     plt.scatter([x[0] for x in data], [x[3] for x in data], marker='.', color='r', s=1)
@@ -92,6 +101,15 @@ def plotDifferences(data):
 
 
 def plotPassData(data):
+    """Plots data about the total pass time for stations on a
+    projection of Earth.
+    
+    Args:
+        data: Array: A list of tuples containing lat lon and pass time.
+        
+    Returns:
+        None.
+    """
     m = initMap()
 
     times = [x[2] for x in data]
