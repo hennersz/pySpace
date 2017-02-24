@@ -141,6 +141,17 @@ def stationVisibility(Rs, stations):
 
 
 def getStationPassTimes(ecefData, station):
+    """Gets a list of pass times for a station 
+    
+    Args:
+        ecefData: Array: A list of ecef positions
+        
+        station: Tuple: The lat lon and masking angle of the station
+        
+    Returns:
+        Array: A list of stations with the rise time, set time,
+        rise angle and set angle
+    """
     seenPrev = False
     res = []
     currStartTime = 0
@@ -161,12 +172,22 @@ def getStationPassTimes(ecefData, station):
 
 
 def allPassTimes(ecefData):
+    """ Creates a grid of stations set 10 degrees apart and calculates the 
+    total time the satellite is visible from each station
+    
+    Args:
+        ecefData: Array: List of ecef positions
+       
+    Returns:
+        Array: A list of station postions and the total time the 
+        satellite is visible.
+    """
     stations = []
     for lat in range(19):
         for lon in range(37):
-            stations.append(((lat-9)*10, (lon-18)*10, 5))
+            stations.append(((lat-9)*10, (lon-18)*10, 5)) # All stations have a masking angle of 5 degrees.
     res = []
-    bar = progressbar.ProgressBar(redirect_stdout=True, max_value=len(stations))
+    bar = progressbar.ProgressBar(redirect_stdout=True, max_value=len(stations)) # This takes a while so progress bar is reassuring
     stationsProcessed = 0
     for station in stations:
         passTimes = getStationPassTimes(ecefData, station)
