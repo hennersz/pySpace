@@ -11,6 +11,7 @@
 """
 
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib
 from mpl_toolkits.basemap import Basemap
 import numpy as np
@@ -94,9 +95,9 @@ def plotPassData(data):
     m = initMap()
 
     times = [x[2] for x in data]
-    x = [x[0] for x in data]
-    y = [x[1] for x in data]
-    
+    x = [i[0] for i in data]
+    y = [i[1] for i in data]
+
     lat, lon = m(x, y)
 
     m.scatter(lon, lat, marker='o', c=times, zorder=10, cmap='hot')

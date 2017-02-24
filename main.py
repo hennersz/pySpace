@@ -17,7 +17,7 @@ from satelliteSimulator.data import Jason, GPSIIR, Galileo
 from satelliteSimulator.utils import writeData, readECIData, readGrndTrckData,\
                                     readData
 from satelliteSimulator.analysis.groundTracks import getGroundTracks
-from satelliteSimulator.plot import plotGroundTracks, plotDifferences, plotPassData
+from satelliteSimulator.plot import plotGroundTracks, plotDifferences, plotPassData, plotECI
 from satelliteSimulator.converters.eci2ecef import ECI2ECEF
 from satelliteSimulator.analysis.differences import HCLDiff, ENUDiff
 from satelliteSimulator.analysis.visibility import getStationPassTimes, allPassTimes
@@ -39,7 +39,7 @@ def getArgs():
     diff = subparsers.add_parser('difference')
     diffAlg = diff.add_mutually_exclusive_group(required=True)
     diffAlg.add_argument('--hcl', action='store_true')
-    diffAlg.add_argument('--enu', nargs=2, metavar=('lat', 'lon'))
+    diffAlg.add_argument('--enu', nargs=2, metavar=('lat', 'lon'), type=float)
     diff.add_argument('-i1', '--infile1', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
     diff.add_argument('-i2', '--infile2', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
     diff.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
@@ -50,7 +50,7 @@ def getArgs():
     grndTrck.add_argument('stations', nargs="*", type=float, metavar='lat lon angle')
 
     plot = subparsers.add_parser('plot')
-    plot.add_argument('graph', type=str, choices=['grndtrck', 'diffs', 'passTimes'])
+    plot.add_argument('graph', type=str, choices=['grndtrck', 'diffs', 'passTimes', 'eci'])
     plot.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
 
     passTimes = subparsers.add_parser('passTimes')
@@ -132,6 +132,9 @@ def plot(args):
     elif args.graph == 'passTimes':
         data = readData(args.infile)
         plotPassData(data)
+    elif args.graph == 'eci':
+        data = readData(args.infile)
+        plotECI(data)
 
 
 def passTimes(args):
