@@ -46,12 +46,31 @@ def normalisedAtan2(numerator, denominator):
 
 
 def writeData(data, csvfile):
+    """Writes data to a file as CSV
+    
+    Args:
+        data: Array: The data to be written.
+        
+        csvfile: File handle.
+        
+    Returns:
+        None
+    """
     writer = csv.writer(csvfile)
     for row in data:
         writer.writerow(flattenTuple(row))
 
 
 def flattenTuple(tpl):
+    """Flattens out any sub arrays or tuples in a tuple
+    for writing to csv.
+    
+    Args:
+        tpl: Tuple.
+    
+    Returns:
+        Array: The flattened tuple.
+    """
     res = []
     for xs in tpl:
         try:
@@ -63,6 +82,14 @@ def flattenTuple(tpl):
 
 
 def readData(csvfile):
+    """Reads data from a csv file and parses all data as floats
+    
+    Args:
+        csvfile: File handle
+        
+    Returns:
+        Array: List of parsed lines
+    """
     result = []
     reader = csv.reader(csvfile)
     for row in reader:
@@ -74,6 +101,15 @@ def readData(csvfile):
 
 
 def readECIData(csvfile):
+    """Parses ECI data from a CVS file
+    
+    Args:
+        csvfile: File handle
+        
+    Returns:
+        Array: List containing position vector, velocity vector 
+        and time.
+    """
     result = []
     reader = csv.reader(csvfile)
     for row in reader:
@@ -85,6 +121,15 @@ def readECIData(csvfile):
 
 
 def readGrndTrckData(csvfile):
+    """Parses ground track data from a csv file.
+    
+    Args:
+        csvfile: File handle.
+        
+    Returns:
+        Array: List of lat lon height and if its visible 
+        from a tracking station.
+    """
     results = []
     reader = csv.reader(csvfile)
     for row in reader:
